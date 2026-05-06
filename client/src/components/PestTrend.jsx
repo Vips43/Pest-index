@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ChartComponent from "./ChartComponent";
-import { useMyStore } from "../store";
+import { useMyStore } from "../store/store";
+
 
 function PestTrend({ children }) {
 
@@ -18,7 +19,7 @@ function PestTrend({ children }) {
   }, []);
 
   const selectedCity = jsonData?.find((city) => city.city === value);
-
+  console.log(jsonData)
   return (
     <>
       {children}
