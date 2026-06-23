@@ -19,7 +19,7 @@ function PestTrend({ children }) {
   }, []);
 
   const selectedCity = jsonData?.find((city) => city.city === value);
-  console.log(jsonData)
+
   return (
     <>
       {children}

@@ -35,7 +35,7 @@ export const useMyStore = create((set, get) => ({
       rain7d: data.rain7d || 0,
       wind: data.wind || 0,
     });
-    console.log(data, pestData);
+    console.log(pestData);
 
     set({
       weather: data,
@@ -86,9 +86,7 @@ export const useMyStore = create((set, get) => ({
     let timer;
     return (...args) => {
       clearTimeout(timer);
-      timer = setTimeout(() => {
-        fn(...args);
-      }, delay);
+      timer = setTimeout(() => fn(...args), delay);
     };
   },
 }));

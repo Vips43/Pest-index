@@ -1,6 +1,7 @@
 import HeroImg from "../components/HeroImg";
 import HowItWorks from "../components/HowItWorks";
 import Livedata from "../components/Livedata";
+import Multiform from "../components/Multiform";
 import Navbar from "../components/Navbar";
 import PestCalendar from "../components/PestCalendar";
 import PestTrend from "../components/PestTrend";
@@ -31,6 +32,7 @@ function HomePage() {
 
         <PestCalendar />
         <section className="bg-primary-light">
+          <Multiform />
           <HowItWorks />
         </section>
       </main>

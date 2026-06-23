@@ -41,20 +41,14 @@ export function calculatePestIndex({
   humidity,
   rain = 0,
   rain7d = 0,
-  wind = 0
+  wind = 0,
 }) {
-
   // --- Basic scoring (0–100) ---
 
   const tempScore =
-    temp < 20 ? 30 :
-    temp < 25 ? 60 :
-    temp <= 32 ? 100 :
-    temp <= 36 ? 70 : 40;
+    temp < 20 ? 30 : temp < 25 ? 60 : temp <= 32 ? 100 : temp <= 36 ? 70 : 40;
 
-  const humidityScore =
-    humidity < 40 ? 20 :
-    humidity < 60 ? 60 : 100;
+  const humidityScore = humidity < 40 ? 20 : humidity < 60 ? 60 : 100;
 
   const rainScore = (() => {
     const combined = 0.3 * rain + 0.7 * (rain7d / 7);
@@ -64,55 +58,39 @@ export function calculatePestIndex({
     return 100;
   })();
 
-  const windScore =
-    wind < 5 ? 100 :
-    wind < 15 ? 70 :
-    wind < 25 ? 40 : 20;
+  const windScore = wind < 5 ? 100 : wind < 15 ? 70 : wind < 25 ? 40 : 20;
 
   // --- Pest calculations ---
 
   const mosquito =
-    0.35 * tempScore +
-    0.30 * humidityScore +
-    0.25 * rainScore +
-    0.10 * windScore;
+    0.35 * tempScore + 0.3 * humidityScore + 0.25 * rainScore + 0.1 * windScore;
 
-  const cockroach =
-    0.60 * tempScore +
-    0.40 * humidityScore;
+  const cockroach = 0.6 * tempScore + 0.4 * humidityScore;
 
-  const termite =
-    0.50 * tempScore +
-    0.50 * ((humidityScore + rainScore) / 2);
+  const termite = 0.5 * tempScore + 0.5 * ((humidityScore + rainScore) / 2);
 
-  const fly =
-    0.50 * tempScore +
-    0.30 * humidityScore +
-    0.20 * rainScore;
+  const fly = 0.5 * tempScore + 0.3 * humidityScore + 0.2 * rainScore;
 
-  const rodent =
-    0.50 * tempScore +
-    0.20 * humidityScore +
-    0.30 * rainScore;
+  const rodent = 0.5 * tempScore + 0.2 * humidityScore + 0.3 * rainScore;
 
-  const ant =
-    0.40 * tempScore +
-    0.40 * humidityScore +
-    0.20 * rainScore;
+  const ant = 0.4 * tempScore + 0.4 * humidityScore + 0.2 * rainScore;
 
   const bedbug =
-    0.70 * 50 + // constant base
-    0.30 * tempScore;
+    0.7 * 50 + // constant base
+    0.3 * tempScore;
 
   // --- helper to round + level ---
   const normalize = (val) => {
     const score = Math.round(Math.max(0, Math.min(100, val)));
 
     const level =
-      score < 30 ? "Low" :
-      score < 50 ? "Moderate" :
-      score < 70 ? "High" :
-      "Very High";
+      score < 30
+        ? "Low"
+        : score < 50
+          ? "Moderate"
+          : score < 70
+            ? "High"
+            : "Very High";
 
     return { score, level };
   };
@@ -124,17 +102,17 @@ export function calculatePestIndex({
     fly: normalize(fly),
     rodent: normalize(rodent),
     ant: normalize(ant),
-    bedbug: normalize(bedbug)
+    bedbug: normalize(bedbug),
   };
 
   // --- PPI (overall index) ---
   const ppiValue =
     0.25 * pests.mosquito.score +
-    0.20 * pests.cockroach.score +
-    0.20 * pests.termite.score +
+    0.2 * pests.cockroach.score +
+    0.2 * pests.termite.score +
     0.15 * pests.rodent.score +
-    0.10 * pests.fly.score +
-    0.10 * pests.ant.score;
+    0.1 * pests.fly.score +
+    0.1 * pests.ant.score;
 
   const ppi = normalize(ppiValue);
 
@@ -145,7 +123,7 @@ export function calculatePestIndex({
       tempScore,
       humidityScore,
       rainScore,
-      windScore
-    }
+      windScore,
+    },
   };
 }

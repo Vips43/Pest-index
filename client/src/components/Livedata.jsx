@@ -1,6 +1,5 @@
 /*eslint-disable */
-import { useEffect, useMemo, useState } from "react";
-import { debounce } from 'lodash'
+import { useMemo, useState } from "react";
 import { useMyStore } from "../store/store";
 
 function Livedata() {
@@ -11,39 +10,17 @@ function Livedata() {
   const weather = useMyStore((state) => state.weather);
   const pestIndices = useMyStore((state) => state.pestIndices);
   const err = useMyStore((state) => state.err);
+  const debounce = useMyStore((state) => state.debounce);
 
-  const debouncedFetch = useMemo(
-    () => debounce((city) => {
-      getCurrWeather(city);
-    }, 500),
-    []
+
+  const debounceUpdate = useMemo(
+    () => debounce((value) => getCurrWeather(value), 500),
+    [],
   );
 
   const handleChange = (e) => {
-    const nextValue = e.target.value;
-
-    // 2. Update the UI immediately
-    setValue(nextValue);
-
-    // 3. Trigger the debounced search with the fresh string
-    debouncedFetch(nextValue);
+    debounceUpdate(e.target.value);
   };
-
-  // 4. Cleanup to prevent memory leaks/zombie API calls
-  useEffect(() => {
-    return () => debouncedFetch.cancel();
-  }, [debouncedFetch]);
-
-  // useEffect(() => {
-  //   if (!value.trim()) return;
-
-  //   const delayDebounceFn = setTimeout(() => {
-  //     getWeather(value.trim());
-  //   }, 700);
-
-  //   return () => clearTimeout(delayDebounceFn);
-  // }, [value, getWeather]);
-
 
   return (
     <div className="space-y-5 m-3 text-center py-10">
@@ -53,13 +30,12 @@ function Livedata() {
       <div>
         <input
           type="text"
-          value={value}
           placeholder="Enter city..."
           onChange={handleChange}
           className="outline-none border-2 border-primary-light/50 focus:border-primary bg-light px-4 py-2 rounded-lg transition-colors w-64 shadow-sm"
         />
       </div>
-
+      <p className="text-white">{value}</p>
       {err && (
         <p className="text-red-500 font-medium capitalize bg-red-100/50 w-fit mx-auto px-4 py-1 rounded-md">
           {err}
@@ -74,11 +50,12 @@ function Livedata() {
             <span
               key={p}
               className={`px-5 py-2.5 rounded-xl capitalize border shadow-md transition-colors duration-300 backdrop-blur-md text-white font-medium tracking-wide
-                ${i > 70
-                  ? "bg-red-500/40 border-red-500"
-                  : i > 40
-                    ? "bg-yellow-500/40 border-yellow-500 text-yellow-50"
-                    : "bg-green-500/40 border-green-500"
+                ${
+                  i > 70
+                    ? "bg-red-500/40 border-red-500"
+                    : i > 40
+                      ? "bg-yellow-500/40 border-yellow-500 text-yellow-50"
+                      : "bg-green-500/40 border-green-500"
                 }`}
             >
               {p}: <strong className="text-2xl ml-2">{i}</strong>
